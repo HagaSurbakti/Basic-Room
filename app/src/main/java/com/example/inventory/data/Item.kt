@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
+
 package com.example.inventory.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 
 /**
  * Entity data class represents a single row in the database.
  */
-class Item(
+@Entity(tableName = "items")
+data class Item(
+    // ID unik untuk setiap item, dihasilkan otomatis oleh database
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+
+    // Nama item
     val name: String,
+
+    // Harga item
     val price: Double,
+
+    // Jumlah item yang tersedia
     val quantity: Int
 )

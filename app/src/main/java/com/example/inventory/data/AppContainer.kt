@@ -14,25 +14,40 @@
  * limitations under the License.
  */
 
-package com.example.inventory.data
+package com.example.inventory.data // Mendefinisikan package untuk mengorganisir kelas ini dalam struktur project
 
-import android.content.Context
+import android.content.Context // Mengimpor kelas Context dari Android SDK untuk mendapatkan informasi aplikasi
 
 /**
  * App container for Dependency injection.
+ *
+ * Interface ini bertindak sebagai container untuk dependency injection,
+ * yang berfungsi menyediakan instance dari ItemsRepository.
  */
 interface AppContainer {
-    val itemsRepository: ItemsRepository
+    val itemsRepository: ItemsRepository // Mendefinisikan properti itemsRepository yang harus diimplementasikan oleh kelas yang mengimplementasi interface ini
 }
 
 /**
  * [AppContainer] implementation that provides instance of [OfflineItemsRepository]
+ *
+ * Kelas AppDataContainer mengimplementasikan AppContainer dan bertanggung jawab
+ * untuk menyediakan instance dari ItemsRepository. Kelas ini memerlukan Context
+ * sebagai parameter untuk menginisialisasi database lokal.
  */
 class AppDataContainer(private val context: Context) : AppContainer {
+
     /**
      * Implementation for [ItemsRepository]
+     *
+     * Properti itemsRepository menggunakan lazy initialization. Dengan menggunakan
+     * kata kunci 'by lazy', inisialisasi OfflineItemsRepository hanya dilakukan saat
+     * itemsRepository pertama kali diakses, menghemat resource aplikasi.
      */
     override val itemsRepository: ItemsRepository by lazy {
-        OfflineItemsRepository()
+        // Membuat instance dari OfflineItemsRepository, yang membutuhkan instance dari ItemDao
+        // ItemDao diperoleh melalui InventoryDatabase.getDatabase(context).itemDao(),
+        // yang mengakses database lokal (Room) untuk menyediakan data
+        OfflineItemsRepository(InventoryDatabase.getDatabase(context).itemDao())
     }
 }
