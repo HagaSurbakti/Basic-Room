@@ -87,8 +87,13 @@ fun ItemEntryScreen(
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+<<<<<<< HEAD
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
+=======
+                    top = innerPadding.calculateTopPadding(),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+>>>>>>> main
                 )
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()

@@ -22,10 +22,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+<<<<<<< HEAD
+=======
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+>>>>>>> main
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -73,6 +79,11 @@ fun ItemDetailsScreen(
     navigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+<<<<<<< HEAD
+=======
+    val uiState = viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+>>>>>>> main
     Scaffold(
         topBar = {
             InventoryTopAppBar(
@@ -83,17 +94,32 @@ fun ItemDetailsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
+<<<<<<< HEAD
                 onClick = { navigateToEditItem(0) },
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
 
+=======
+                onClick = { navigateToEditItem(uiState.value.itemDetails.id) },
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier
+                    .padding(
+                        end = WindowInsets.safeDrawing.asPaddingValues()
+                            .calculateEndPadding(LocalLayoutDirection.current)
+                    )
+>>>>>>> main
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = stringResource(R.string.edit_item_title),
                 )
             }
+<<<<<<< HEAD
         }, modifier = modifier
+=======
+        },
+        modifier = modifier,
+>>>>>>> main
     ) { innerPadding ->
         ItemDetailsBody(
             itemDetailsUiState = ItemDetailsUiState(),
@@ -102,8 +128,13 @@ fun ItemDetailsScreen(
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+<<<<<<< HEAD
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
+=======
+                    top = innerPadding.calculateTopPadding(),
+                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
+>>>>>>> main
                 )
                 .verticalScroll(rememberScrollState())
         )
