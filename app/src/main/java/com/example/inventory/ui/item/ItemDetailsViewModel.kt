@@ -21,23 +21,28 @@ import androidx.lifecycle.ViewModel
 import com.example.inventory.data.ItemsRepository
 
 /**
- * ViewModel to retrieve, update and delete an item from the [ItemsRepository]'s data source.
+ * ViewModel untuk layar detail item. ViewModel ini bertanggung jawab untuk mengambil,
+ * memperbarui, dan menghapus item dari sumber data [ItemsRepository].
+ * SavedStateHandle digunakan untuk menyimpan dan mengambil data item berdasarkan argumen yang diberikan.
  */
 class ItemDetailsViewModel(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle  // Mengambil SavedStateHandle untuk menyimpan state layar
 ) : ViewModel() {
 
-    private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.itemIdArg])
+    // Mendapatkan ID item dari argumen yang diteruskan melalui navigasi
+    private val itemId: Int = checkNotNull(savedStateHandle[ItemDetailsDestination.itemIdArg])  // Memastikan itemId ada
 
     companion object {
+        // Waktu tunggu untuk operasi (misalnya jaringan atau pembaruan data)
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
 /**
- * UI state for ItemDetailsScreen
+ * UI state untuk layar ItemDetails. Menyimpan status informasi item yang akan ditampilkan di UI.
+ * Variabel ini digunakan untuk mengelola kondisi item, seperti apakah item habis stok (outOfStock) dan detail item itu sendiri.
  */
 data class ItemDetailsUiState(
-    val outOfStock: Boolean = true,
-    val itemDetails: ItemDetails = ItemDetails()
+    val outOfStock: Boolean = true,  // Menyimpan status apakah item habis stok atau tidak
+    val itemDetails: ItemDetails = ItemDetails()  // Menyimpan detail item yang ditampilkan
 )

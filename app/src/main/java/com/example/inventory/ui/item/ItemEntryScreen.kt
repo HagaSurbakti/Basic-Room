@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2023 The Android Open Source Project
  *
@@ -52,20 +51,24 @@ import java.util.Currency
 import java.util.Locale
 
 
+// Destinasi untuk layar entri item
 object ItemEntryDestination : NavigationDestination {
     override val route = "item_entry"
     override val titleRes = R.string.item_entry_title
 }
 
+// Layar entri item, digunakan untuk memasukkan atau mengedit item
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemEntryScreen(
-    navigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
-    canNavigateBack: Boolean = true,
-    viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    navigateBack: () -> Unit,  // Fungsi untuk kembali ke layar sebelumnya
+    onNavigateUp: () -> Unit,  // Fungsi untuk navigasi ke layar atas
+    canNavigateBack: Boolean = true,  // Menentukan apakah navigasi mundur diizinkan
+    viewModel: ItemEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)  // ViewModel untuk item entry
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()  // Scope untuk coroutine, untuk operasi async
+
+    // Scaffold untuk layout dasar, dengan top bar dan konten
     Scaffold(
         topBar = {
             InventoryTopAppBar(
@@ -74,11 +77,11 @@ fun ItemEntryScreen(
                 navigateUp = onNavigateUp
             )
         }
-    ) { innerPadding ->
+    ) { innerPadding ->  // Padding untuk konten yang berada di bawah top bar
         ItemEntryBody(
             itemUiState = viewModel.itemUiState,
-            onItemValueChange = viewModel::updateUiState,
-            onSaveClick = {
+            onItemValueChange = viewModel::updateUiState,  // Mengupdate state item
+            onSaveClick = {  // Menyimpan item saat tombol save diklik
                 coroutineScope.launch {
                     viewModel.saveItem()
                     navigateBack()
@@ -87,58 +90,59 @@ fun ItemEntryScreen(
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-<<<<<<< HEAD
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
-=======
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
->>>>>>> main
                 )
-                .verticalScroll(rememberScrollState())
-                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())  // Membuat tampilan scrollable
+                .fillMaxWidth()  // Mengisi lebar layar
         )
     }
 }
 
+// Body untuk entri item, terdiri dari input form dan tombol save
 @Composable
 fun ItemEntryBody(
-    itemUiState: ItemUiState,
-    onItemValueChange: (ItemDetails) -> Unit,
-    onSaveClick: () -> Unit,
+    itemUiState: ItemUiState,  // State UI item
+    onItemValueChange: (ItemDetails) -> Unit,  // Fungsi untuk memperbarui nilai item
+    onSaveClick: () -> Unit,  // Fungsi yang dipanggil ketika tombol save diklik
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),
-        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large)),  // Jarak antar elemen
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))  // Padding sekitar body
     ) {
+        // Form untuk input data item
         ItemInputForm(
             itemDetails = itemUiState.itemDetails,
             onValueChange = onItemValueChange,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()  // Mengisi lebar kolom
         )
+
+        // Tombol simpan
         Button(
             onClick = onSaveClick,
-            enabled = itemUiState.isEntryValid,
+            enabled = itemUiState.isEntryValid,  // Tombol hanya aktif jika input valid
             shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()  // Mengisi lebar tombol
         ) {
-            Text(stringResource(R.string.save_action))
+            Text(stringResource(R.string.save_action))  // Teks tombol simpan
         }
     }
 }
 
+// Form untuk input data item
 @Composable
 fun ItemInputForm(
-    itemDetails: ItemDetails,
+    itemDetails: ItemDetails,  // Data item yang sedang diedit
     modifier: Modifier = Modifier,
-    onValueChange: (ItemDetails) -> Unit = {},
-    enabled: Boolean = true
+    onValueChange: (ItemDetails) -> Unit = {},  // Fungsi untuk memperbarui item
+    enabled: Boolean = true  // Status apakah form aktif atau tidak
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))  // Jarak antar input
     ) {
+        // Input untuk nama item
         OutlinedTextField(
             value = itemDetails.name,
             onValueChange = { onValueChange(itemDetails.copy(name = it)) },
@@ -148,29 +152,33 @@ fun ItemInputForm(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),  // Mengisi lebar kolom
             enabled = enabled,
-            singleLine = true
+            singleLine = true  // Input hanya satu baris
         )
+
+        // Input untuk harga item
         OutlinedTextField(
             value = itemDetails.price,
             onValueChange = { onValueChange(itemDetails.copy(price = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),  // Input tipe angka desimal
             label = { Text(stringResource(R.string.item_price_req)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             ),
-            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },
+            leadingIcon = { Text(Currency.getInstance(Locale.getDefault()).symbol) },  // Menampilkan simbol mata uang
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
+
+        // Input untuk jumlah item
         OutlinedTextField(
             value = itemDetails.quantity,
             onValueChange = { onValueChange(itemDetails.copy(quantity = it)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),  // Input tipe angka
             label = { Text(stringResource(R.string.quantity_req)) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -181,6 +189,8 @@ fun ItemInputForm(
             enabled = enabled,
             singleLine = true
         )
+
+        // Teks pemberitahuan bahwa semua input diperlukan
         if (enabled) {
             Text(
                 text = stringResource(R.string.required_fields),
@@ -190,6 +200,7 @@ fun ItemInputForm(
     }
 }
 
+// Preview layar entri item
 @Preview(showBackground = true)
 @Composable
 private fun ItemEntryScreenPreview() {
@@ -201,4 +212,3 @@ private fun ItemEntryScreenPreview() {
         ), onItemValueChange = {}, onSaveClick = {})
     }
 }
-

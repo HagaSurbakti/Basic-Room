@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2023 The Android Open Source Project
  *
@@ -22,16 +21,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-<<<<<<< HEAD
-=======
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
->>>>>>> main
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -65,6 +58,10 @@ import com.example.inventory.data.Item
 import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
 
+/**
+ * ItemDetailsDestination adalah objek yang mendefinisikan informasi untuk navigasi ke layar detail item.
+ * Ini mencakup route dan title untuk tampilan layar serta argumen yang diperlukan.
+ */
 object ItemDetailsDestination : NavigationDestination {
     override val route = "item_details"
     override val titleRes = R.string.item_detail_title
@@ -72,18 +69,17 @@ object ItemDetailsDestination : NavigationDestination {
     val routeWithArgs = "$route/{$itemIdArg}"
 }
 
+/**
+ * Fungsi utama untuk layar detail item. Ini membangun tampilan dengan AppBar dan FAB untuk mengedit item.
+ * Menyediakan UI untuk menampilkan detail item dan memungkinkan aksi jual dan hapus.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemDetailsScreen(
-    navigateToEditItem: (Int) -> Unit,
-    navigateBack: () -> Unit,
+    navigateToEditItem: (Int) -> Unit,  // Fungsi untuk menavigasi ke layar edit item
+    navigateBack: () -> Unit,           // Fungsi untuk kembali ke layar sebelumnya
     modifier: Modifier = Modifier
 ) {
-<<<<<<< HEAD
-=======
-    val uiState = viewModel.uiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
->>>>>>> main
     Scaffold(
         topBar = {
             InventoryTopAppBar(
@@ -94,33 +90,19 @@ fun ItemDetailsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-<<<<<<< HEAD
-                onClick = { navigateToEditItem(0) },
+                onClick = { navigateToEditItem(0) },  // Menavigasi ke layar edit dengan ID 0
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-
-=======
-                onClick = { navigateToEditItem(uiState.value.itemDetails.id) },
-                shape = MaterialTheme.shapes.medium,
-                modifier = Modifier
-                    .padding(
-                        end = WindowInsets.safeDrawing.asPaddingValues()
-                            .calculateEndPadding(LocalLayoutDirection.current)
-                    )
->>>>>>> main
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = stringResource(R.string.edit_item_title),
                 )
             }
-<<<<<<< HEAD
-        }, modifier = modifier
-=======
         },
-        modifier = modifier,
->>>>>>> main
+        modifier = modifier
     ) { innerPadding ->
+        // Menampilkan konten utama layar dengan margin yang disesuaikan dengan innerPadding
         ItemDetailsBody(
             itemDetailsUiState = ItemDetailsUiState(),
             onSellItem = { },
@@ -128,24 +110,23 @@ fun ItemDetailsScreen(
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-<<<<<<< HEAD
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
-=======
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
->>>>>>> main
                 )
                 .verticalScroll(rememberScrollState())
         )
     }
 }
 
+/**
+ * Body layar yang menampilkan detail item, tombol untuk menjual, dan tombol untuk menghapus item.
+ * Menyediakan konfirmasi sebelum menghapus item.
+ */
 @Composable
 private fun ItemDetailsBody(
-    itemDetailsUiState: ItemDetailsUiState,
-    onSellItem: () -> Unit,
-    onDelete: () -> Unit,
+    itemDetailsUiState: ItemDetailsUiState,  // State untuk item details
+    onSellItem: () -> Unit,                  // Aksi ketika tombol jual ditekan
+    onDelete: () -> Unit,                    // Aksi ketika tombol hapus ditekan
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -154,10 +135,13 @@ private fun ItemDetailsBody(
     ) {
         var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
 
+        // Menampilkan detail item menggunakan ItemDetails composable
         ItemDetails(
             item = itemDetailsUiState.itemDetails.toItem(),
             modifier = Modifier.fillMaxWidth()
         )
+
+        // Tombol untuk menjual item
         Button(
             onClick = onSellItem,
             modifier = Modifier.fillMaxWidth(),
@@ -166,6 +150,8 @@ private fun ItemDetailsBody(
         ) {
             Text(stringResource(R.string.sell))
         }
+
+        // Tombol untuk menghapus item
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,
@@ -173,6 +159,8 @@ private fun ItemDetailsBody(
         ) {
             Text(stringResource(R.string.delete))
         }
+
+        // Dialog konfirmasi hapus
         if (deleteConfirmationRequired) {
             DeleteConfirmationDialog(
                 onDeleteConfirm = {
@@ -186,6 +174,10 @@ private fun ItemDetailsBody(
     }
 }
 
+/**
+ * Menampilkan detail dari item dalam bentuk card.
+ * Masing-masing baris menunjukkan nama item, jumlah stok, dan harga.
+ */
 @Composable
 fun ItemDetails(
     item: Item, modifier: Modifier = Modifier
@@ -207,8 +199,7 @@ fun ItemDetails(
                 itemDetail = item.name,
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
-                        id = R.dimen
-                            .padding_medium
+                        id = R.dimen.padding_medium
                     )
                 )
             )
@@ -217,8 +208,7 @@ fun ItemDetails(
                 itemDetail = item.quantity.toString(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
-                        id = R.dimen
-                            .padding_medium
+                        id = R.dimen.padding_medium
                     )
                 )
             )
@@ -227,8 +217,7 @@ fun ItemDetails(
                 itemDetail = item.formatedPrice(),
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(
-                        id = R.dimen
-                            .padding_medium
+                        id = R.dimen.padding_medium
                     )
                 )
             )
@@ -237,17 +226,23 @@ fun ItemDetails(
     }
 }
 
+/**
+ * Baris detail untuk menampilkan label dan nilai item, seperti nama, jumlah, dan harga.
+ */
 @Composable
 private fun ItemDetailsRow(
     @StringRes labelResID: Int, itemDetail: String, modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
-        Text(stringResource(labelResID))
+        Text(stringResource(labelResID))  // Label item (misalnya: Item, Quantity)
         Spacer(modifier = Modifier.weight(1f))
-        Text(text = itemDetail, fontWeight = FontWeight.Bold)
+        Text(text = itemDetail, fontWeight = FontWeight.Bold)  // Nilai item (misalnya: nama item, jumlah)
     }
 }
 
+/**
+ * Dialog konfirmasi untuk menghapus item. Pengguna dapat memilih untuk menghapus atau membatalkan.
+ */
 @Composable
 private fun DeleteConfirmationDialog(
     onDeleteConfirm: () -> Unit, onDeleteCancel: () -> Unit, modifier: Modifier = Modifier
@@ -268,6 +263,9 @@ private fun DeleteConfirmationDialog(
         })
 }
 
+/**
+ * Preview untuk menampilkan UI dalam editor Compose dengan data dummy.
+ */
 @Preview(showBackground = true)
 @Composable
 fun ItemDetailsScreenPreview() {

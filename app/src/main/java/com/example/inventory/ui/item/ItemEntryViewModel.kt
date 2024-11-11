@@ -25,31 +25,39 @@ import com.example.inventory.data.ItemsRepository
 import java.text.NumberFormat
 
 /**
- * ViewModel to validate and insert items in the Room database.
+ * ViewModel untuk memvalidasi dan memasukkan item ke dalam database Room.
  */
 class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel() {
 
     /**
-     * Holds current item ui state
+     * Menyimpan state UI saat ini dari item.
      */
     var itemUiState by mutableStateOf(ItemUiState())
         private set
 
     /**
-     * Updates the [itemUiState] with the value provided in the argument. This method also triggers
-     * a validation for input values.
+     * Memperbarui [itemUiState] dengan nilai yang diberikan di parameter.
+     * Metode ini juga memicu validasi untuk nilai input.
      */
     fun updateUiState(itemDetails: ItemDetails) {
+        // Memperbarui state item dan melakukan validasi input
         itemUiState =
             ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
     }
 
+    /**
+     * Menyimpan item jika input valid.
+     */
     suspend fun saveItem() {
+        // Validasi input, jika valid maka item akan disimpan
         if (validateInput()) {
             itemsRepository.insertItem(itemUiState.itemDetails.toItem())
         }
     }
 
+    /**
+     * Memvalidasi input untuk memastikan nama, harga, dan kuantitas tidak kosong.
+     */
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
             name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
@@ -58,38 +66,42 @@ class ItemEntryViewModel(private val itemsRepository: ItemsRepository) : ViewMod
 }
 
 /**
- * Represents Ui State for an Item.
+ * Mewakili state UI untuk item.
  */
 data class ItemUiState(
     val itemDetails: ItemDetails = ItemDetails(),
-    val isEntryValid: Boolean = false
+    val isEntryValid: Boolean = false  // Menentukan apakah entri item valid
 )
 
 data class ItemDetails(
     val id: Int = 0,
-    val name: String = "",
-    val price: String = "",
-    val quantity: String = "",
+    val name: String = "",  // Nama item
+    val price: String = "",  // Harga item dalam bentuk string
+    val quantity: String = "",  // Kuantitas item dalam bentuk string
 )
 
 /**
- * Extension function to convert [ItemDetails] to [Item]. If the value of [ItemDetails.price] is
- * not a valid [Double], then the price will be set to 0.0. Similarly if the value of
- * [ItemDetails.quantity] is not a valid [Int], then the quantity will be set to 0
+ * Fungsi ekstensi untuk mengonversi [ItemDetails] ke [Item].
+ * Jika harga atau kuantitas tidak valid, maka harga akan diatur ke 0.0 dan kuantitas ke 0.
  */
 fun ItemDetails.toItem(): Item = Item(
     id = id,
     name = name,
-    price = price.toDoubleOrNull() ?: 0.0,
-    quantity = quantity.toIntOrNull() ?: 0
+    price = price.toDoubleOrNull() ?: 0.0,  // Mengonversi harga ke Double, jika tidak valid maka 0.0
+    quantity = quantity.toIntOrNull() ?: 0  // Mengonversi kuantitas ke Int, jika tidak valid maka 0
 )
 
+/**
+ * Fungsi ekstensi untuk memformat harga [Item] ke format mata uang.
+ */
 fun Item.formatedPrice(): String {
+    // Menggunakan NumberFormat untuk memformat harga sebagai mata uang
     return NumberFormat.getCurrencyInstance().format(price)
 }
 
 /**
- * Extension function to convert [Item] to [ItemUiState]
+ * Fungsi ekstensi untuk mengonversi [Item] ke [ItemUiState].
+ * Menyertakan status validitas entri item.
  */
 fun Item.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState(
     itemDetails = this.toItemDetails(),
@@ -97,11 +109,11 @@ fun Item.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState
 )
 
 /**
- * Extension function to convert [Item] to [ItemDetails]
+ * Fungsi ekstensi untuk mengonversi [Item] ke [ItemDetails].
  */
 fun Item.toItemDetails(): ItemDetails = ItemDetails(
     id = id,
     name = name,
-    price = price.toString(),
-    quantity = quantity.toString()
+    price = price.toString(),  // Mengonversi harga ke string
+    quantity = quantity.toString()  // Mengonversi kuantitas ke string
 )

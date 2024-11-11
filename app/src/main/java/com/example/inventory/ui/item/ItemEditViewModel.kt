@@ -27,20 +27,26 @@ import com.example.inventory.data.ItemsRepository
  * ViewModel to retrieve and update an item from the [ItemsRepository]'s data source.
  */
 class ItemEditViewModel(
-    savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,  // Mendapatkan SavedStateHandle untuk mengambil argumen yang diteruskan ke ViewModel
 ) : ViewModel() {
 
     /**
      * Holds current item ui state
+     * Menyimpan status UI item yang sedang diedit menggunakan mutableStateOf.
      */
-    var itemUiState by mutableStateOf(ItemUiState())
-        private set
+    var itemUiState by mutableStateOf(ItemUiState())  // Menyimpan state UI dari item
+        private set  // Mengatur agar hanya ViewModel yang bisa mengubah itemUiState
 
+    // Mendapatkan ID item yang diteruskan melalui argumen SavedStateHandle
     private val itemId: Int = checkNotNull(savedStateHandle[ItemEditDestination.itemIdArg])
 
+    /**
+     * Fungsi untuk memvalidasi input yang diberikan dalam form item
+     * Validasi memastikan bahwa nama, harga, dan jumlah item tidak kosong
+     */
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()  // Mengecek apakah nama, harga, dan jumlah item sudah diisi
         }
     }
 }

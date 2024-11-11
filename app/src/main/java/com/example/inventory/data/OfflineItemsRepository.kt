@@ -18,20 +18,39 @@ package com.example.inventory.data
 
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Implementasi repository untuk mengelola data item secara offline dengan menggunakan [ItemDao].
+ * Semua operasi dilakukan melalui DAO untuk berinteraksi dengan database lokal.
+ */
 class OfflineItemsRepository(private val itemDao: ItemDao) : ItemsRepository {
 
-    // Mengambil semua item dari database melalui `itemDao`.
+    /**
+     * Mengambil semua item dari database dengan menggunakan fungsi `getAllItems()` dari [ItemDao].
+     * Mengembalikan aliran data (Flow) yang berisi daftar item.
+     */
     override fun getAllItemsStream(): Flow<List<Item>> = itemDao.getAllItems()
 
-    // Mengambil item tertentu berdasarkan ID dari database melalui `itemDao`.
+    /**
+     * Mengambil item berdasarkan [id] dari database dengan menggunakan fungsi `getItem(id)` dari [ItemDao].
+     * Mengembalikan aliran data (Flow) yang berisi item yang ditemukan atau null jika tidak ada.
+     */
     override fun getItemStream(id: Int): Flow<Item?> = itemDao.getItem(id)
 
-    // Menyisipkan item baru ke database melalui `itemDao`.
+    /**
+     * Menyisipkan item baru ke dalam database dengan menggunakan fungsi `insert()` dari [ItemDao].
+     * Fungsi ini dijalankan secara suspend untuk memastikan eksekusi dalam coroutine.
+     */
     override suspend fun insertItem(item: Item) = itemDao.insert(item)
 
-    // Menghapus item dari database melalui `itemDao`.
+    /**
+     * Menghapus item dari database dengan menggunakan fungsi `delete()` dari [ItemDao].
+     * Fungsi ini dijalankan secara suspend untuk memastikan eksekusi dalam coroutine.
+     */
     override suspend fun deleteItem(item: Item) = itemDao.delete(item)
 
-    // Memperbarui item di database melalui `itemDao`.
+    /**
+     * Memperbarui item yang ada di database dengan menggunakan fungsi `update()` dari [ItemDao].
+     * Fungsi ini dijalankan secara suspend untuk memastikan eksekusi dalam coroutine.
+     */
     override suspend fun updateItem(item: Item) = itemDao.update(item)
 }

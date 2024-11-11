@@ -35,23 +35,25 @@ import com.example.inventory.ui.AppViewModelProvider
 import com.example.inventory.ui.navigation.NavigationDestination
 import com.example.inventory.ui.theme.InventoryTheme
 
+// Menentukan objek navigasi untuk layar edit item, dengan route dan parameter itemId
 object ItemEditDestination : NavigationDestination {
-    override val route = "item_edit"
-    override val titleRes = R.string.edit_item_title
-    const val itemIdArg = "itemId"
-    val routeWithArgs = "$route/{$itemIdArg}"
+    override val route = "item_edit"  // Menentukan route untuk layar edit item
+    override val titleRes = R.string.edit_item_title  // Judul untuk layar edit item
+    const val itemIdArg = "itemId"  // Parameter untuk menerima ID item
+    val routeWithArgs = "$route/{$itemIdArg}"  // Menyusun route dengan parameter itemId
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemEditScreen(
-    navigateBack: () -> Unit,
-    onNavigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: ItemEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    navigateBack: () -> Unit,  // Fungsi untuk menavigasi kembali
+    onNavigateUp: () -> Unit,  // Fungsi untuk navigasi ke atas
+    modifier: Modifier = Modifier,  // Modifier untuk menyesuaikan tampilan
+    viewModel: ItemEditViewModel = viewModel(factory = AppViewModelProvider.Factory)  // ViewModel untuk layar edit item
 ) {
     Scaffold(
         topBar = {
+            // Menampilkan AppBar dengan judul dan opsi untuk kembali
             InventoryTopAppBar(
                 title = stringResource(ItemEditDestination.titleRes),
                 canNavigateBack = true,
@@ -60,36 +62,18 @@ fun ItemEditScreen(
         },
         modifier = modifier
     ) { innerPadding ->
+        // Menampilkan badan layar edit item dengan komponen input dan tombol simpan
         ItemEntryBody(
-            itemUiState = viewModel.itemUiState,
-<<<<<<< HEAD
-            onItemValueChange = { },
-            onSaveClick = { },
+            itemUiState = viewModel.itemUiState,  // Mendapatkan state UI dari ViewModel
+            onItemValueChange = { },  // Fungsi untuk menangani perubahan nilai item
+            onSaveClick = { },  // Fungsi untuk menangani aksi simpan
             modifier = Modifier
                 .padding(
                     start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
                     end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                     top = innerPadding.calculateTopPadding()
-=======
-            onItemValueChange = viewModel::updateUiState,
-            onSaveClick = {
-                // Note: If the user rotates the screen very fast, the operation may get cancelled
-                // and the item may not be updated in the Database. This is because when config
-                // change occurs, the Activity will be recreated and the rememberCoroutineScope will
-                // be cancelled - since the scope is bound to composition.
-                coroutineScope.launch {
-                    viewModel.updateItem()
-                    navigateBack()
-                }
-            },
-            modifier = Modifier
-                .padding(
-                    start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
-                    top = innerPadding.calculateTopPadding(),
-                    end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
->>>>>>> main
                 )
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState())  // Mengaktifkan scroll vertikal pada layar
         )
     }
 }
@@ -97,6 +81,7 @@ fun ItemEditScreen(
 @Preview(showBackground = true)
 @Composable
 fun ItemEditScreenPreview() {
+    // Preview untuk tampilan layar edit item
     InventoryTheme {
         ItemEditScreen(navigateBack = { /*Do nothing*/ }, onNavigateUp = { /*Do nothing*/ })
     }

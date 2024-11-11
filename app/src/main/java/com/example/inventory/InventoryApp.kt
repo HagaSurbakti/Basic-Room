@@ -35,35 +35,40 @@ import com.example.inventory.R.string
 import com.example.inventory.ui.navigation.InventoryNavHost
 
 /**
- * Top level composable that represents screens for the application.
+ * Composable utama yang mewakili layar untuk aplikasi.
+ * Ini bertanggung jawab untuk menginisialisasi navigasi dan menunjukkan konten layar.
  */
 @Composable
 fun InventoryApp(navController: NavHostController = rememberNavController()) {
+    // Memanggil InventoryNavHost untuk mengelola navigasi antar layar
     InventoryNavHost(navController = navController)
 }
 
 /**
- * App bar to display title and conditionally display the back navigation.
+ * App bar yang menampilkan judul dan secara kondisional menampilkan navigasi kembali.
+ * Jika navigasi kembali diizinkan, tombol kembali akan muncul di app bar.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryTopAppBar(
-    title: String,
-    canNavigateBack: Boolean,
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-    navigateUp: () -> Unit = {}
+    title: String,  // Judul yang akan ditampilkan pada app bar
+    canNavigateBack: Boolean,  // Menentukan apakah tombol kembali ditampilkan
+    modifier: Modifier = Modifier,  // Modifier untuk menyesuaikan tampilan app bar
+    scrollBehavior: TopAppBarScrollBehavior? = null,  // Opsional, digunakan untuk perilaku scroll app bar
+    navigateUp: () -> Unit = {}  // Fungsi yang akan dipanggil ketika tombol kembali diklik
 ) {
+    // Menggunakan CenterAlignedTopAppBar untuk menampilkan app bar dengan judul di tengah
     CenterAlignedTopAppBar(
-        title = { Text(title) },
-        modifier = modifier,
-        scrollBehavior = scrollBehavior,
+        title = { Text(title) },  // Menampilkan judul di tengah app bar
+        modifier = modifier,  // Menambahkan modifier yang diberikan
+        scrollBehavior = scrollBehavior,  // Mendukung perilaku scroll pada app bar jika diperlukan
         navigationIcon = {
+            // Menampilkan tombol navigasi kembali hanya jika 'canNavigateBack' adalah true
             if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
+                IconButton(onClick = navigateUp) {  // Tombol yang akan memanggil 'navigateUp' saat diklik
                     Icon(
-                        imageVector = Filled.ArrowBack,
-                        contentDescription = stringResource(string.back_button)
+                        imageVector = Filled.ArrowBack,  // Ikon panah kembali
+                        contentDescription = stringResource(string.back_button)  // Deskripsi ikon untuk aksesibilitas
                     )
                 }
             }
